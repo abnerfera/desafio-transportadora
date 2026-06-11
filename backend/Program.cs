@@ -41,4 +41,11 @@ app.UseCors("AllowReact");
 
 app.MapControllers();
 
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    // Aplica as migrations automaticamente no banco do Docker
+    dbContext.Database.Migrate();
+}
+
 app.Run();

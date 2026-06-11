@@ -9,7 +9,27 @@ services:
     ports:
       - "5433:5432"
     volumes:
-      - pgdata:/var/lib/postgresql
+      - pgdata:/var/lib/postgresql/data 
+
+  backend:
+    build:
+      context: ./backend
+    container_name: transportadora_backend
+    ports:
+      - "5264:8080" 
+    depends_on:
+      - db
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=db;Port=5432;Database=TransportadoraDb;Username=postgres;Password=admin
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: transportadora_frontend
+    ports:
+      - "5173:80" 
+    depends_on:
+      - backend
 
 volumes:
   pgdata:

@@ -5,13 +5,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace backend.Controllers;
 
-[ApiController] // Avisa ao C# que esta classe é uma API
-[Route("api/[controller]")] // A URL será: http://localhost:porta/api/coleta
+[ApiController]
+[Route("api/[controller]")]
 public class ColetaController : ControllerBase
 {
     private readonly AppDbContext _context;
 
-    // Construtor: Puxamos o nosso banco de dados (AppDbContext) para dentro do controller
     public ColetaController(AppDbContext context)
     {
         _context = context;
@@ -25,9 +24,10 @@ public class ColetaController : ControllerBase
         var coletas = await _context.Coletas
             .Include(c => c.Motorista)
             .Include(c => c.Veiculo)
+            .Include(c => c.Ocorrencias)
             .ToListAsync();
 
-        return Ok(coletas); // Retorna um status 200 (Sucesso) com a lista
+        return Ok(coletas); 
     }
 
     // ENDPOINT 2: Criar uma nova solicitação de coleta
