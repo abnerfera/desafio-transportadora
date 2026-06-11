@@ -45,4 +45,60 @@ public class ColetaController : ControllerBase
 
         return Created("", novaColeta); // Retorna status 201 (Criado)
     }
+
+    // ENDPOINT 3: Atribuir Motorista e Veículo a uma Coleta
+    [HttpPatch("{id}/atribuir")]
+    public async Task<IActionResult> Atribuir(int id, [FromBody] AtribuirDto dto)
+    {
+        var coleta = await _context.Coletas.FindAsync(id);
+        if (coleta == null) return NotFound("Coleta não encontrada.");
+
+        // Regra de Negócio: Pedido cancelado não pode voltar ao fluxo ativo
+        if (coleta.Status == StatusColeta.Cancelada)
+            return BadRequest("Não é possível alterar uma coleta que já foi cancelada.");
+
+        coleta.MotoristaId = dto.MotoristaId;
+        coleta.VeiculoId = dto.VeiculoId;
+        coleta.Status = StatusColeta.Atribuida;
+
+        await _context.SaveChangesAsync();
+        return Ok(coleta);
+    }
+
+    // ENDPOINT 4: Marcar coleta como concluída
+    [HttpPatch("{id}/finalizar")]
+    public async Task<IActionResult> FinalizarColeta(int id)
+    {
+        var coleta = await _context.Coletas.FindAsync(id);
+        if (coleta == null) return NotFound("Coleta não encontrada.");
+
+        // Regra de Negócio: Pedido cancelado não pode voltar ao fluxo
+        if (coleta.Status == StatusColeta.Cancelada)
+            return BadRequest("Uma coleta cancelada não pode ser marcada como coletada.");
+
+        // Regra de Negócio: Não é permitido marcar como Coletada sem motorista e veículo vinculados
+        if (coleta.MotoristaId == null || coleta.VeiculoId == null)
+            return BadRequest("É obrigatório vincular um motorista e um veículo antes de finalizar a coleta.");
+
+        coleta.Status = StatusColeta.Coletada;
+
+        await _context.SaveChangesAsync();
+        return Ok(coleta);
+    }
+
+    // ENDPOINT 5: Cancelar a coleta
+    [HttpPatch("{id}/cancelar")]
+    public async Task<IActionResult> CancelarColeta(int id)
+    {
+        var coleta = await _context.Coletas.FindAsync(id);
+        if (coleta == null) return NotFound("Coleta não encontrada.");
+
+        if (coleta.Status == StatusColeta.Cancelada)
+            return BadRequest("Esta coleta já encontra-se cancelada.");
+
+        coleta.Status = StatusColeta.Cancelada;
+
+        await _context.SaveChangesAsync();
+        return Ok(coleta);
+    }
 }
