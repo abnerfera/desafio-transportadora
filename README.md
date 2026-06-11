@@ -38,6 +38,7 @@ A aplicação foi desenhada para rodar de forma isolada via containers, sem a ne
 *1. Clone o repositório:*
 
    git clone https://github.com/abnerfera/desafio-transportadora.git
+   
    cd desafio-transportadora
 
 *2. Suba a infraestrutura completa:*
