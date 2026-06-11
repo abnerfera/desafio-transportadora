@@ -101,4 +101,26 @@ public class ColetaController : ControllerBase
         await _context.SaveChangesAsync();
         return Ok(coleta);
     }
+
+    // ENDPOINT 6: Registrar uma nova ocorrência na coleta
+    [HttpPost("{id}/ocorrencia")]
+    public async Task<IActionResult> RegistrarOcorrencia(int id, [FromBody] OcorrenciaDto dto)
+    {
+        var coleta = await _context.Coletas.FindAsync(id);
+        if (coleta == null) return NotFound("Coleta não encontrada.");
+
+        // Cria a ocorrência e carimba a hora do servidor (UtcNow)
+        var ocorrencia = new Ocorrencia
+        {
+            ColetaId = id,
+            Descricao = dto.Descricao,
+            UsuarioResponsavel = dto.UsuarioResponsavel,
+            DataHora = DateTime.UtcNow 
+        };
+
+        _context.Ocorrencias.Add(ocorrencia);
+        await _context.SaveChangesAsync();
+
+        return Ok(ocorrencia);
+    }
 }
