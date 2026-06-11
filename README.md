@@ -31,7 +31,16 @@ Além dos requisitos obrigatórios, este projeto conta com:
 
 ## Como Executar o Projeto Localmente
 
+> **Nota sobre o Swagger:** Por questões de segurança, a interface de documentação (Swagger) é exibida apenas em ambiente de desenvolvimento. O projeto está configurado para rodar em modo de produção por padrão via Docker. Caso precise acessar o Swagger durante os testes, altere a variável 'ASPNETCORE_ENVIRONMENT' para 'Development' no arquivo 'docker-compose.yml'.
+
 A aplicação foi desenhada para rodar de forma isolada via containers, sem a necessidade de instalar bancos de dados ou SDKs na máquina host.
+
+---
+## 🎥 Vídeo de Demonstração
+Para uma visão geral das funcionalidades, regras de negócio e a orquestração do sistema, confira o vídeo de apresentação abaixo:
+
+**[Clique aqui para assistir à demonstração do projeto](https://youtu.be/JVdHTcEIE9Y)**
+---
 
 **Pré-requisitos:** Docker e Docker Desktop/Engine instalados.
 
